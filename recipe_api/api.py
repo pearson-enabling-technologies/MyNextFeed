@@ -64,14 +64,12 @@ def query_recipes(meal, cuisine, ingredients):
             + name_clause \
             + [{ 'match_all' : {} }]
     query={
-        'explain' : True,
         'query' : {
             'bool' : {
                 'should' : should_clause
             }
         }
     }
-    pprint(query)
     return es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
 
 
@@ -96,7 +94,6 @@ def modify_plan(id, day, meal):
 
 #bottle.debug(True) 
 #run(host='0.0.0.0', reloader=True)
-pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato'))
 
 
 
