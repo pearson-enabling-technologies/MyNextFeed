@@ -28,7 +28,7 @@ es = rawes.Elastic('localhost:9200')
 courses = {
     'breakfast' : 'breakfast-brunch',
     'lunch' : 'appetizers,pasta,salads,sandwiches,soups,bread',
-    'dinner' : 'entrees,grains,hors-d-oeuvres,legumes,pastries,pies-and-tarts,pies-and-tarts,vegetables,potatoes,legumes' # removed sauces
+    'dinner' : 'entrees,grains,hors-d-oeuvres,legumes,pastries,pies-and-tarts,pies-and-tarts,vegetables,potatoes' # removed sauces
 }
 
 
@@ -58,12 +58,13 @@ def query_recipes(meal, cuisine, ingredients):
     name_clause = []
     for ingredient in ingredients.split(','):
         ingredients_clause.append({ 'match' : { 'ingredients' : ingredient } })
-        name_clause.append({ 'match' : { 'name' : ingredient } })
-    should_clause = [{ 'match' : { 'cuisine' : cuisine } }] \
+        name_clause.append({ 'match' : { 'name' : { 'query' : ingredient, 'boost' : 3 } } })
+        should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } }] \
             + ingredients_clause \
             + name_clause \
             + [{ 'match_all' : {} }]
     query={
+        'explain' : True,
         'query' : {
             'bool' : {
                 'should' : should_clause
