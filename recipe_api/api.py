@@ -95,7 +95,7 @@ def query_recipes(meal, cuisine, ingredients, calories):
                                 "field": "calories"
                             }
                         },
-                        "script": "(1 - abs(" + str(calories) + " - doc['calories'].value))"
+                        "script": "(1 - min( " + str(calories) + "/ doc['calories'].value, " + str(calories) + "/ doc['calories'].value))"
                     }
                 ]
             }
