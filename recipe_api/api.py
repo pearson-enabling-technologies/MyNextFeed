@@ -4,6 +4,7 @@ import uuid
 import rawes
 from pprint import pprint
 from bottle import route, run
+from random import randint
 
 
 """
@@ -23,7 +24,7 @@ more than one recipe.
 """
 
 
-es = rawes.Elastic('localhost:9200')
+es = rawes.Elastic('ec2-54-216-139-182.eu-west-1.compute.amazonaws.com:9200')
 
 courses = {
     'breakfast' : 'breakfast-brunch',
@@ -31,6 +32,11 @@ courses = {
     'dinner' : 'entrees,grains,hors-d-oeuvres,legumes,pastries,pies-and-tarts,pies-and-tarts,vegetables,potatoes' # removed sauces
 }
 
+calorie_avgs = {
+    'breakfast' : 0.2,
+    'lunch' : 0.3,
+    'dinner' : 0.5
+}
 
 @route('/', method='GET')
 def homepage():
@@ -39,10 +45,21 @@ def homepage():
 
 @route('/plan/:calories/:cuisine/:ingredients', method='GET')
 def get_plan(calories, cuisine, ingredients):
-    return dict(
-        id = 'new plan id',
-        todo = '7-day recipe plan with 3 meals per day, max %d calories/person/day, preferring %s cuisine and including %s'
-            % (int(calories), cuisine, ingredients))
+    weekPlan = []
+    for i in range(7):
+        dayPlan = {}
+        for meal in courses.keys():
+            recipeList = query_recipes(meal, cuisine, ingredients)
+            dayPlan[meal] = recipeList['hits']['hits'][randint(0,19)]
+        weekPlan.append(dayPlan)
+    plan = dict( 
+        days = weekPlan, 
+        metadata = dict(
+            calories = calories,
+            cuisine = cuisine,
+            ingredients = ingredients)
+        )
+    return plan
 
 
 @route('/substitute/:id/:day/:meal', method='GET')
@@ -53,23 +70,38 @@ def get_substitute(id, day, meal):
         todo = 'Substitute %s on day %d with another random choice' % (meal, int(day)))
 
 
-def query_recipes(meal, cuisine, ingredients):
+def query_recipes(meal, cuisine, ingredients, calories):
     ingredients_clause = []
     name_clause = []
     for ingredient in ingredients.split(','):
         ingredients_clause.append({ 'match' : { 'ingredients' : ingredient } })
         name_clause.append({ 'match' : { 'name' : { 'query' : ingredient, 'boost' : 3 } } })
-        should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } }] \
-            + ingredients_clause \
-            + name_clause \
-            + [{ 'match_all' : {} }]
-    query={
-        'query' : {
-            'bool' : {
-                'should' : should_clause
+    should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } }] \
+        + ingredients_clause \
+        + name_clause \
+        + [{ 'match_all' : {} }]
+    query = {
+        "query": {
+            "custom_filters_score": {
+                "query": { 
+                    'bool' : {
+                        'should' : should_clause
+                    }
+                },
+                "filters": [
+                    {
+                        "filter": {
+                            "exists": {
+                                "field": "calories"
+                            }
+                        },
+                        "script": "(1 - abs(" + str(calories) + " - doc['calories'].value))"
+                    }
+                ]
             }
         }
     }
+    pprint(query)
     return es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
 
 
@@ -95,6 +127,8 @@ def modify_plan(id, day, meal):
 
 #bottle.debug(True) 
 #run(host='0.0.0.0', reloader=True)
+pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1))
+# pprint(get_plan('dinner', 'Italian', 'chicken,basil,tomato'))
 
 
 
