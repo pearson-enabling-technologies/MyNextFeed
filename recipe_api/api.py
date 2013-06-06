@@ -4,7 +4,7 @@ import uuid
 import rawes
 from pprint import pprint
 from bottle import route, run
-from random import randint
+from random import randint, choice
 
 
 """
@@ -50,7 +50,7 @@ def get_plan(calories, cuisine, ingredients):
         dayPlan = {}
         for meal in courses.keys():
             recipeList = query_recipes(meal, cuisine, ingredients)
-            dayPlan[meal] = recipeList['hits']['hits'][randint(0,19)]
+            dayPlan[meal] = choice(recipeList['hits']['hits']) # TODO check field names
         weekPlan.append(dayPlan)
     plan = dict( 
         days = weekPlan, 
@@ -116,14 +116,18 @@ def retrieve_plan(id):
 
 
 def modify_plan(id, day, meal):
-    old_plan = retrieve_plan(id)
+    plan = retrieve_plan(id)
     # Re-run old query
-    cuisine = old_plan['metadata']['cuisine']
-    calories = old_plan['metadata']['calories']
-    ingredients = old_plan['metadata']['ingredients']
-    recipes = query_recipes(meal, cuisine, ingredients)
-    # used_recipes = set([day[meal]
-    # TODO replace old_plan['days'][day][meal] with a random new recipe from the results
+    cuisine = plan['metadata']['cuisine']
+    calories = plan['metadata']['calories']
+    ingredients = plan['metadata']['ingredients']
+    recipes = query_recipes(meal, cuisine, ingredients, calories)
+    # Replace unwanted recipe with a random new recipe from the results (if not already used)
+    used_recipes = set(day[meal]['name'] for day in plan['days']) # TODO check field names
+    candidate_recipes = [recipe for recipe in recipes where recipe['name'] not in used_recipes]
+    chosen_recipe = choice(candidate_recipes)
+    plan['days'][day][meal] = chosen_recipe
+    return plan
 
 #bottle.debug(True) 
 #run(host='0.0.0.0', reloader=True)
