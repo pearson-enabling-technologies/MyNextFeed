@@ -1,7 +1,7 @@
 import bottle
 import simplejson
-import uuid
 import rawes
+import hashlib
 from pprint import pprint
 from bottle import route, run
 from random import randint, choice
@@ -49,7 +49,7 @@ def get_plan(calories, cuisine, ingredients):
     for i in range(7):
         dayPlan = {}
         for meal in courses.keys():
-            recipeList = query_recipes(meal, cuisine, ingredients)
+            recipeList = query_recipes(meal, cuisine, ingredients, calories)
             dayPlan[meal] = choice(recipeList['hits']['hits']) # TODO check field names
         weekPlan.append(dayPlan)
     plan = dict( 
@@ -59,17 +59,15 @@ def get_plan(calories, cuisine, ingredients):
             cuisine = cuisine,
             ingredients = ingredients)
         )
-    store_plan(plan)
+    plan['metadata']['id'] = store_plan(plan)
     return plan
 
 
 @route('/substitute/:id/:day/:meal', method='GET')
 def get_substitute(id, day, meal):
-    return dict(
-        id = 'new plan id',
-        old_id = 'original plan id',
-        todo = 'Substitute %s on day %d with another random choice' % (meal, int(day)))
-
+    new_plan = modify_plan(id, day, meal)
+    plan['metadata']['id'] = store_plan(plan)
+    return plan
 
 def query_recipes(meal, cuisine, ingredients, calories):
     ingredients_clause = []
@@ -96,7 +94,7 @@ def query_recipes(meal, cuisine, ingredients, calories):
                                 "field": "calories"
                             }
                         },
-                        "script": "(1 - min( " + str(calories) + "/ doc['calories'].value, " + str(calories) + "/ doc['calories'].value))"
+                        "script": "(0 - min( " + str(calories) + "/ doc['calories'].value, doc['calories'].value / " + str(calories) + "))"
                     }
                 ]
             }
@@ -106,7 +104,9 @@ def query_recipes(meal, cuisine, ingredients, calories):
 
 
 def store_plan(plan):
-    new_id = uuid.uuid5('recipe_plan', repr(plan))
+    sha1 = hashlib.sha1()
+    sha1.update(str(plan))
+    new_id = sha1.hexdigest()
     es.put('recipe_plans/plan/' + new_id, data=plan)
     return new_id
 
@@ -116,7 +116,7 @@ def retrieve_plan(id):
 
 
 def modify_plan(id, day, meal):
-    plan = retrieve_plan(id)
+    plan = retrieve_plan(id)['_source']
     # Re-run old query
     cuisine = plan['metadata']['cuisine']
     calories = plan['metadata']['calories']
@@ -124,10 +124,9 @@ def modify_plan(id, day, meal):
     recipes = query_recipes(meal, cuisine, ingredients, calories)
     # Replace unwanted recipe with a random new recipe from the results (if not already used)
     used_recipes = set(day[meal]['name'] for day in plan['days']) # TODO check field names
-    candidate_recipes = [recipe for recipe in recipes where recipe['name'] not in used_recipes]
+    candidate_recipes = [recipe for recipe in recipes if recipe['name'] not in used_recipes]
     chosen_recipe = choice(candidate_recipes)
     plan['days'][day][meal] = chosen_recipe
-    store_plan(plan)
     return plan
 
 bottle.debug(True) 
