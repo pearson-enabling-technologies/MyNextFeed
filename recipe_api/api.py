@@ -59,6 +59,7 @@ def get_plan(calories, cuisine, ingredients):
             cuisine = cuisine,
             ingredients = ingredients)
         )
+    store_plan(plan)
     return plan
 
 
@@ -101,14 +102,13 @@ def query_recipes(meal, cuisine, ingredients, calories):
             }
         }
     }
-    pprint(query)
     return es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
 
 
 def store_plan(plan):
     new_id = uuid.uuid5('recipe_plan', repr(plan))
     es.put('recipe_plans/plan/' + new_id, data=plan)
-    return plan
+    return new_id
 
 
 def retrieve_plan(id):
@@ -127,12 +127,12 @@ def modify_plan(id, day, meal):
     candidate_recipes = [recipe for recipe in recipes where recipe['name'] not in used_recipes]
     chosen_recipe = choice(candidate_recipes)
     plan['days'][day][meal] = chosen_recipe
+    store_plan(plan)
     return plan
 
-#bottle.debug(True) 
-#run(host='0.0.0.0', reloader=True)
-pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1))
-# pprint(get_plan('dinner', 'Italian', 'chicken,basil,tomato'))
+bottle.debug(True) 
+run(host='0.0.0.0', reloader=True)
+#pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1))
 
 
 
