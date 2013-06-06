@@ -50,7 +50,7 @@ def get_plan(calories, cuisine, ingredients):
         dayPlan = {}
         for meal in courses.keys():
             recipeList = query_recipes(meal, cuisine, ingredients, calories)
-            dayPlan[meal] = choice(recipeList['hits']['hits']) # TODO check field names
+            dayPlan[meal] = choice(recipeList)
         weekPlan.append(dayPlan)
     plan = dict( 
         days = weekPlan, 
@@ -65,7 +65,7 @@ def get_plan(calories, cuisine, ingredients):
 
 @route('/substitute/:id/:day/:meal', method='GET')
 def get_substitute(id, day, meal):
-    new_plan = modify_plan(id, day, meal)
+    plan = modify_plan(id, int(day), meal)
     plan['metadata']['id'] = store_plan(plan)
     return plan
 
@@ -100,7 +100,8 @@ def query_recipes(meal, cuisine, ingredients, calories):
             }
         }
     }
-    return es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
+    raw_result = es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
+    return [hit['_source'] for hit in raw_result['hits']['hits']]
 
 
 def store_plan(plan):
@@ -123,10 +124,10 @@ def modify_plan(id, day, meal):
     ingredients = plan['metadata']['ingredients']
     recipes = query_recipes(meal, cuisine, ingredients, calories)
     # Replace unwanted recipe with a random new recipe from the results (if not already used)
-    used_recipes = set(day[meal]['name'] for day in plan['days']) # TODO check field names
+    used_recipes = set(d[meal]['name'] for d in plan['days']) # TODO check field names
     candidate_recipes = [recipe for recipe in recipes if recipe['name'] not in used_recipes]
     chosen_recipe = choice(candidate_recipes)
-    plan['days'][day][meal] = chosen_recipe
+    plan['days'][day] = chosen_recipe
     return plan
 
 bottle.debug(True) 
