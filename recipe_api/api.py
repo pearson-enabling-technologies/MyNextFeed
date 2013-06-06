@@ -32,7 +32,7 @@ courses = {
     'dinner' : 'entrees,grains,hors-d-oeuvres,legumes,pastries,pies-and-tarts,pies-and-tarts,vegetables,potatoes' # removed sauces
 }
 
-calorie_avgs = {
+calorieMealRatios = {
     'breakfast' : 0.2,
     'lunch' : 0.3,
     'dinner' : 0.5
@@ -46,20 +46,22 @@ def homepage():
 @route('/plan/:calories/:cuisine/:ingredients', method='GET')
 def get_plan(calories, cuisine, ingredients):
     weekPlan = []
+    mealRecipeLists = {}
+    for i, meal in enumerate(courses):
+        mealRecipeLists[meal] = query_recipes(meal, cuisine, ingredients, calories*calorieMealRatios[meal], 20)['hits']['hits']
     for i in range(7):
         dayPlan = {}
         for meal in courses.keys():
-            recipeList = query_recipes(meal, cuisine, ingredients, calories)
-            dayPlan[meal] = choice(recipeList['hits']['hits']) # TODO check field names
+            dayPlan[meal] = mealRecipeLists[meal][0]
+            mealRecipeLists[meal].pop(0)
         weekPlan.append(dayPlan)
-    plan = dict( 
+    plan = dict(
         days = weekPlan, 
         metadata = dict(
             calories = calories,
             cuisine = cuisine,
             ingredients = ingredients)
         )
-    plan['metadata']['id'] = store_plan(plan)
     return plan
 
 
@@ -69,7 +71,7 @@ def get_substitute(id, day, meal):
     plan['metadata']['id'] = store_plan(plan)
     return plan
 
-def query_recipes(meal, cuisine, ingredients, calories):
+def query_recipes(meal, cuisine, ingredients, calories, n):
     ingredients_clause = []
     name_clause = []
     for ingredient in ingredients.split(','):
@@ -94,13 +96,13 @@ def query_recipes(meal, cuisine, ingredients, calories):
                                 "field": "calories"
                             }
                         },
-                        "script": "(0 - min( " + str(calories) + "/ doc['calories'].value, doc['calories'].value / " + str(calories) + "))"
+                        "script": "(min( " + str(calories) + "/ doc['calories'].value, doc['calories'].value) / " + str(calories) + ")"
                     }
                 ]
             }
         }
     }
-    return es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
+    return es.get('recipes/' + courses[meal] + '/_search?size=' + str(n), data=query)
 
 
 def store_plan(plan):
@@ -129,10 +131,10 @@ def modify_plan(id, day, meal):
     plan['days'][day][meal] = chosen_recipe
     return plan
 
-bottle.debug(True) 
-run(host='0.0.0.0', reloader=True)
-#pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1))
-
+# bottle.debug(True) 
+# run(host='0.0.0.0', reloader=True)
+# pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1, 1))
+pprint(get_plan(1, 'Italian', 'chicken,basil,tomato'))
 
 
 
