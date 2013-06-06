@@ -90,6 +90,7 @@ def modify_plan(id, day, meal):
     calories = old_plan['metadata']['calories']
     ingredients = old_plan['metadata']['ingredients']
     recipes = query_recipes(meal, cuisine, ingredients)
+    # used_recipes = set([day[meal]
     # TODO replace old_plan['days'][day][meal] with a random new recipe from the results
 
 #bottle.debug(True) 
