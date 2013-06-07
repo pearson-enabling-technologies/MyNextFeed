@@ -40,9 +40,16 @@ calorieMealRatios = {
     'dinner' : 0.5
 }
 
+
+def jsonp(request, dictionary):
+    if (request.query.callback):
+        return "%s(%s)" % (request.query.callback, dictionary)
+    return dictionary
+
+
 @route('/', method='GET')
 def homepage():
-    return es.get('/')
+    return jsonp(es.get('/'))
     
 
 @route('/plan/:calories/:cuisine/:ingredients', method='GET')
@@ -65,14 +72,15 @@ def get_plan(calories, cuisine, ingredients):
             ingredients = ingredients)
         )
     plan['metadata']['id'] = store_plan(plan)
-    return plan
+    return jsonp(plan)
 
 
 @route('/substitute/:id/:day/:meal', method='GET')
 def get_substitute(id, day, meal):
     plan = modify_plan(id, int(day), meal)
     plan['metadata']['id'] = store_plan(plan)
-    return plan
+    return jsonp(plan)
+
 
 def query_recipes(meal, cuisine, ingredients, calories, n):
     ingredients_clause = []
