@@ -50,8 +50,11 @@ def jsonp(dictionary):
 @route('/cuisines', method='GET')
 def get_cuisines():
     data = query_cuisines()
-    return jsonp(
-        dict((term['term'], term['count']) for term in data['terms']))
+    cuisines = dict((term['term'], term['count']) for term in data['terms'])
+    # HARDCODED HACK
+    cuisines['international'] = cuisines['n']
+    del(cuisines['n'])
+    return jsonp(cuisines)
 
 
 @route('/', method='GET')
