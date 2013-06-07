@@ -27,7 +27,7 @@ MealPlanner.MealCriteriaBar = Backbone.View.extend({
             };
         }).sort(function(a, b) {
             return a.name > b.name ? 1 : -1;
-        });;
+        });
     },
     events : {
         "click .submit" : function() {
