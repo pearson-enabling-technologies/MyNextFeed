@@ -138,12 +138,14 @@ def modify_plan(id, day, meal):
 
 def transform_meal(meal):
     output = {}
-    output['meal_name'] = meal['name']
-    output['meal_thumbnail'] = meal['thumb']
-    output['meal_image'] = meal['image']
-    output['calories'] = meal['calories']
-    output['recipe'] = meal['directions']
-    output['ingredients'] = meal['ingredients']
+    output['meal_name'] = meal.get('name')
+    output['meal_thumbnail'] = meal.get('thumb')
+    output['meal_image'] = meal.get('image')
+    output['calories'] = meal.get('calories')
+    # FIXME put real recipes in later
+    # output['recipe'] = meal.get('directions')
+    output['recipe'] = ' '.join(meal.get('ingredients'))
+    output['ingredients'] = meal.get('ingredients')
     return output
 
 
