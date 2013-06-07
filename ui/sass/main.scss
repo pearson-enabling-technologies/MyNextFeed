@@ -43,8 +43,18 @@ body {
     padding-top: $main-header-height / 5;
     input,
     select,
-    label {
+    label,
+    button {
       font-size: 1.2em;
+    }
+    button {
+      border: 1px solid black;
+      border-radius: 5px;
+      cursor: pointer;
+      background: rgba($accent-color, .7);
+      color: white;
+      text-transform: uppercase;
+      padding: 0 1em;
     }
   }
 }

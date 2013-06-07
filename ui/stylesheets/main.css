@@ -139,14 +139,25 @@ body {
   flex-direction: row;
   padding-top: 0.8vw;
 }
-/* line 46, ../sass/main.scss */
+/* line 47, ../sass/main.scss */
 .criteriaBar form input,
 .criteriaBar form select,
-.criteriaBar form label {
+.criteriaBar form label,
+.criteriaBar form button {
   font-size: 1.2em;
 }
+/* line 50, ../sass/main.scss */
+.criteriaBar form button {
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  background: rgba(157, 19, 73, 0.7);
+  color: white;
+  text-transform: uppercase;
+  padding: 0 1em;
+}
 
-/* line 52, ../sass/main.scss */
+/* line 62, ../sass/main.scss */
 .days-container {
   position: absolute;
   background: white;
@@ -165,7 +176,7 @@ body {
   -o-flex-direction: row;
   flex-direction: row;
 }
-/* line 61, ../sass/main.scss */
+/* line 71, ../sass/main.scss */
 .days-container .day-name {
   position: absolute;
   top: -1.5vh;
@@ -185,7 +196,7 @@ body {
   padding: .5vh .5vw;
 }
 
-/* line 82, ../sass/main.scss */
+/* line 92, ../sass/main.scss */
 h1 {
   padding: .5vw;
   height: 4vw;
@@ -197,7 +208,7 @@ h1 {
   font-size: 1.5vw;
 }
 
-/* line 91, ../sass/main.scss */
+/* line 101, ../sass/main.scss */
 .day {
   border-right: 1px solid #9d1349;
   -webkit-box-shadow: rgba(157, 19, 73, 0.1) 1px 0 4px 0;
@@ -218,11 +229,11 @@ h1 {
   flex-direction: column;
   width: 14.285%;
 }
-/* line 99, ../sass/main.scss */
+/* line 109, ../sass/main.scss */
 .day:last-child {
   border-right: none;
 }
-/* line 102, ../sass/main.scss */
+/* line 112, ../sass/main.scss */
 .day .course {
   padding: 1vw;
   position: relative;
@@ -239,24 +250,24 @@ h1 {
   -o-flex: 1;
   flex: 1;
 }
-/* line 109, ../sass/main.scss */
+/* line 119, ../sass/main.scss */
 .day .course:last-child {
   border-bottom: none;
   -webkit-box-shadow: transparent 0 0;
   -moz-box-shadow: transparent 0 0;
   box-shadow: transparent 0 0;
 }
-/* line 113, ../sass/main.scss */
+/* line 123, ../sass/main.scss */
 .day .course .full-desc {
   display: none;
 }
-/* line 118, ../sass/main.scss */
+/* line 128, ../sass/main.scss */
 .day .lead h3 {
   color: #9d1349;
   margin-bottom: .3em;
   font-size: 1vw;
 }
-/* line 123, ../sass/main.scss */
+/* line 133, ../sass/main.scss */
 .day .lead img {
   position: absolute;
   left: 1vw;
@@ -265,7 +276,7 @@ h1 {
   max-width: 80%;
   max-height: 200px;
 }
-/* line 131, ../sass/main.scss */
+/* line 141, ../sass/main.scss */
 .day .lead dl {
   position: absolute;
   left: 0.5vw;
@@ -277,16 +288,16 @@ h1 {
   border-radius: 5px;
   background: white;
 }
-/* line 141, ../sass/main.scss */
+/* line 151, ../sass/main.scss */
 .day .lead dl > * {
   padding: 2px;
 }
-/* line 146, ../sass/main.scss */
+/* line 156, ../sass/main.scss */
 .day dt {
   font-size: .6vw;
   color: #666;
 }
-/* line 150, ../sass/main.scss */
+/* line 160, ../sass/main.scss */
 .day dd {
   font-style: italic;
   font-weight: bold;
