@@ -54,7 +54,7 @@ def get_plan(calories, cuisine, ingredients):
     for i in range(7):
         dayPlan = {}
         for meal in courses.keys():
-            dayPlan[meal] = mealRecipeLists[meal][0]
+            dayPlan[meal] = transform_meal(mealRecipeLists[meal][0])
             mealRecipeLists[meal].pop(0)
         weekPlan.append(dayPlan)
     plan = dict(
@@ -132,8 +132,20 @@ def modify_plan(id, day, meal):
     used_recipes = set(d[meal]['name'] for d in plan['days']) # TODO check field names
     candidate_recipes = [recipe for recipe in recipes if recipe['name'] not in used_recipes]
     chosen_recipe = choice(candidate_recipes)
-    plan['days'][day] = chosen_recipe
+    plan['days'][day] = transform_meal(chosen_recipe)
     return plan
+
+
+def transform_meal(meal):
+    output = {}
+    output['meal_name'] = meal['name']
+    output['meal_thumbnail'] = meal['thumb']
+    output['meal_image'] = meal['image']
+    output['calories'] = meal['calories']
+    output['recipe'] = meal['directions']
+    output['ingredients'] = meal['ingredients']
+    return output
+
 
 bottle.debug(True) 
 run(host='0.0.0.0', reloader=True)
