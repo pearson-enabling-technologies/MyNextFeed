@@ -41,9 +41,9 @@ calorieMealRatios = {
 }
 
 
-def jsonp(request, dictionary):
-    if (request.query.callback):
-        return "%s(%s)" % (request.query.callback, dictionary)
+def jsonp(dictionary):
+    if (bottle.request.query.callback):
+        return "%s(%s)" % (bottle.request.query.callback, dictionary)
     return dictionary
 
 
