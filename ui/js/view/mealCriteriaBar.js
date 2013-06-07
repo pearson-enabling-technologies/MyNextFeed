@@ -17,13 +17,17 @@ MealPlanner.MealCriteriaBar = Backbone.View.extend({
                 name : pair[0],
                 count: pair[1]
             };
+        }).sort(function(a, b) {
+                return a.name > b.name ? 1 : -1;
         });
         this.ingredients = _.pairs(data.ingredients).map(function(pair) {
             return {
                 name : pair[0],
                 count: pair[1]
             };
-        });
+        }).sort(function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        });;
     },
     events : {
         "click .submit" : function() {
