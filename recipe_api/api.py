@@ -24,6 +24,8 @@ more than one recipe.
 """
 
 
+result_size = 20
+
 es = rawes.Elastic('ec2-54-216-139-182.eu-west-1.compute.amazonaws.com:9200')
 
 courses = {
@@ -48,7 +50,7 @@ def get_plan(calories, cuisine, ingredients):
     weekPlan = []
     mealRecipeLists = {}
     for i, meal in enumerate(courses):
-        mealRecipeLists[meal] = query_recipes(meal, cuisine, ingredients, calories*calorieMealRatios[meal], 20)['hits']['hits']
+        mealRecipeLists[meal] = query_recipes(meal, cuisine, ingredients, int(calories)*calorieMealRatios[meal], result_size)
     for i in range(7):
         dayPlan = {}
         for meal in courses.keys():
@@ -62,6 +64,7 @@ def get_plan(calories, cuisine, ingredients):
             cuisine = cuisine,
             ingredients = ingredients)
         )
+    plan['metadata']['id'] = store_plan(plan)
     return plan
 
 
@@ -102,7 +105,7 @@ def query_recipes(meal, cuisine, ingredients, calories, n):
             }
         }
     }
-    raw_result = es.get('recipes/' + courses[meal] + '/_search?size=20', data=query)
+    raw_result = es.get('recipes/%s/_search?size=%d' % (courses[meal], n), data=query)
     return [hit['_source'] for hit in raw_result['hits']['hits']]
 
 
@@ -124,7 +127,7 @@ def modify_plan(id, day, meal):
     cuisine = plan['metadata']['cuisine']
     calories = plan['metadata']['calories']
     ingredients = plan['metadata']['ingredients']
-    recipes = query_recipes(meal, cuisine, ingredients, calories)
+    recipes = query_recipes(meal, cuisine, ingredients, calories, result_size)
     # Replace unwanted recipe with a random new recipe from the results (if not already used)
     used_recipes = set(d[meal]['name'] for d in plan['days']) # TODO check field names
     candidate_recipes = [recipe for recipe in recipes if recipe['name'] not in used_recipes]
@@ -132,10 +135,10 @@ def modify_plan(id, day, meal):
     plan['days'][day] = chosen_recipe
     return plan
 
-# bottle.debug(True) 
-# run(host='0.0.0.0', reloader=True)
+bottle.debug(True) 
+run(host='0.0.0.0', reloader=True)
 # pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1, 1))
-pprint(get_plan(1, 'Italian', 'chicken,basil,tomato'))
+# pprint(get_plan(1, 'Italian', 'chicken,basil,tomato'))
 
 
 
