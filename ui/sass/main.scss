@@ -7,7 +7,7 @@
 @import "compass/reset";
 
 $accent-color: #9D1349;
-$main-header-height: 3vw;
+$main-header-height: 4vw;
 
 @for $i from 1 through 6 {
   h#{$i} {
@@ -17,7 +17,8 @@ $main-header-height: 3vw;
 
 body {
   background: $accent-color;
-  font: normal 1vw "Helvetica Neue", "Helvetica", sans-serif;
+  color: #333;
+  font: normal .8vw "Helvetica Neue", "Helvetica", sans-serif;
 }
 
 #container {
@@ -35,10 +36,11 @@ body {
   height: $main-header-height;
   top: 0;
   right: 0;
-  width: 50%;
-  display: table;
-  > * {
-    display: table-cell;
+  padding: 0 1vw;
+  form {
+    @include experimental-value(display, flex);
+    @include experimental(flex-direction, row);
+    @include experimental(box-pack, center);
   }
 }
 
@@ -51,6 +53,25 @@ body {
   right: 0;
   @include experimental-value(display, flex);
   @include experimental(flex-direction, row);
+  .day-name {
+    position: absolute;
+    top: -1.5vh;
+    background: rgba($accent-color, .5);
+    color: white;
+    width: 14.28%;
+    @include box-sizing(border-box);
+    $border: 1px solid black;
+    border: {
+      top: $border;
+      bottom: $border;
+    };
+    text-transform: uppercase;
+    letter-spacing: .5em;
+    font-weight: bold;
+    text-align: right;
+    font-size: .8vw;
+    padding: .5vh .5vw;
+  }
 }
 
 h1 {
@@ -68,7 +89,7 @@ h1 {
   @include box-sizing(border-box);
   @include experimental-value(display, flex);
   @include experimental(flex-direction, column);
-  width: 14.285714286%;
+  width: 14.285%;
   $course-padding: 1vw;
   &:last-child {
     border-right: none;
@@ -87,7 +108,6 @@ h1 {
     .full-desc {
       display: none;
     }
-    width: 100% / 7;
   }
   .lead {
     h3 {

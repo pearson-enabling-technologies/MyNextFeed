@@ -8,17 +8,18 @@ MealPlanner.DayView = Backbone.View.extend({
         this.subviews = {};
         model.get('mealNames').forEach(function(mealName) {
             self.subviews[mealName] = new MealPlanner.RecipeView({
-                model: model.get(mealName).at(0)
+                model : model.get(mealName).at(0)
             });
         });
-
     },
     render     : function() {
         this.$el.empty();
+        console.log(this.model.get('day'));
         this.model.get('mealNames').forEach(function(mealName) {
             this.subviews[mealName].render();
             this.$el.append(this.subviews[mealName].el);
         }.bind(this));
+        this.$el.prepend("<div class='day-name'>" + this.model.get("day") +"</div>");
     },
     className  : 'day'
 });

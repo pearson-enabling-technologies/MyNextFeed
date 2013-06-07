@@ -3,6 +3,7 @@
 (function() {
     var resourcesQueue = [];
     var templates = ['recipe', 'meal_criteria_bar'];
+    var dayName = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     var initView = function(cuisine, ingredient, calories) {
         $.ajax({
             url : 'http://ec2-54-216-139-182.eu-west-1.compute.amazonaws.com:8080/plan/' + calories + '/' + cuisine + '/' + ingredient,
@@ -10,9 +11,11 @@
         }).then(function(plan) {
             var daysContainer = $(".days-container");
             daysContainer.empty();
-            var dayViews = plan.days.map(function(day) {
+            var dayViews = plan.days.map(function(day, i) {
+                var model = new MealPlanner.DayModel(day);
+                model.set('day', dayName[i]);
                 return new MealPlanner.DayView({
-                    model : new MealPlanner.DayModel(day)
+                    model : model
                 });
             });
             dayViews.forEach(function(view) {
@@ -55,6 +58,8 @@
                 }, {});
                 initView(criteria.cuisine, criteria.ingredient, criteria.calories);
             });
+
+            initView('international', 'all', 2000);
 
             $("#container h1").after(criteriaBar.$el);
         });
