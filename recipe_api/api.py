@@ -47,6 +47,12 @@ def jsonp(dictionary):
     return dictionary
 
 
+@route('/', method='GET')
+def homepage():
+    # Quick test to make sure ElasticSearch is alive :-)
+    return jsonp(es.get('/'))
+
+
 @route('/ingredients/:count', method='GET')
 def get_ingredients(count):
     data = query_terms('ingredients', int(count))
@@ -63,11 +69,6 @@ def get_cuisines():
     del(cuisines['n'])
     return jsonp(cuisines)
 
-
-@route('/', method='GET')
-def homepage():
-    return jsonp(es.get('/'))
-    
 
 @route('/plan/:calories/:cuisine/:ingredients', method='GET')
 def get_plan(calories, cuisine, ingredients):
