@@ -1,0 +1,160 @@
+{
+  "kind": "pkm#courses",
+  "url": "https://api.pearson.com/kitchen-manager/v1/courses?apikey=9b7305c0523c3902ec01b44e5a5c53ad&limit=200",
+  "count": 30,
+  "offset": 0,
+  "limit": 200,
+  "total": 30,
+  "results": [{
+      "name": "Appetizers",
+      "id": "appetizers",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/appetizers?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 199
+    }, {
+      "name": "Beverages",
+      "id": "beverages",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/beverages?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 26
+    }, {
+      "name": "Bread",
+      "id": "bread",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/bread?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 180
+    }, {
+      "name": "Breakfast / Brunch",
+      "id": "breakfast-brunch",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/breakfast-brunch?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 107
+    }, {
+      "name": "Cakes and Tortes",
+      "id": "cakes-and-tortes",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/cakes-and-tortes?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 127
+    }, {
+      "name": "Chocolate and Decorative Work",
+      "id": "chocolate-and-decorative-work",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/chocolate-and-decorative-work?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 48
+    }, {
+      "name": "Cookies",
+      "id": "cookies",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/cookies?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 117
+    }, {
+      "name": "Custards and Creams",
+      "id": "custards-and-creams",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/custards-and-creams?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 125
+    }, {
+      "name": "Desserts",
+      "id": "desserts",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/desserts?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 155
+    }, {
+      "name": "Dressings",
+      "id": "dressings",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/dressings?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 126
+    }, {
+      "name": "Entrees",
+      "id": "entrees",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/entrees?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 371
+    }, {
+      "name": "Grains",
+      "id": "grains",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/grains?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 77
+    }, {
+      "name": "Hors d'oeuvres",
+      "id": "hors-d-oeuvres",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/hors-d-oeuvres?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 62
+    }, {
+      "name": "Icings and Glazes",
+      "id": "icings-and-glazes",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/icings-and-glazes?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 63
+    }, {
+      "name": "Legumes",
+      "id": "legumes",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/legumes?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 14
+    }, {
+      "name": "Mise en Place",
+      "id": "mise-en-place",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/mise-en-place?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 266
+    }, {
+      "name": "N/A",
+      "id": "n-a",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/n-a?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 103
+    }, {
+      "name": "Pasta",
+      "id": "pasta",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/pasta?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 69
+    }, {
+      "name": "Pastries",
+      "id": "pastries",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/pastries?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 50
+    }, {
+      "name": "Pastry Elements",
+      "id": "pastry-elements",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/pastry-elements?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 128
+    }, {
+      "name": "Pies and Tarts",
+      "id": "pies-and-tarts",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/pies-and-tarts?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 117
+    }, {
+      "name": "Potatoes",
+      "id": "potatoes",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/potatoes?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 59
+    }, {
+      "name": "Protein Fabrication",
+      "id": "protein-fabrication",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/protein-fabrication?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 36
+    }, {
+      "name": "Salads",
+      "id": "salads",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/salads?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 184
+    }, {
+      "name": "Sandwiches",
+      "id": "sandwiches",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/sandwiches?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 97
+    }, {
+      "name": "Sauces",
+      "id": "sauces",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/sauces?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 312
+    }, {
+      "name": "Side Dishes",
+      "id": "side-dishes",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/side-dishes?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 27
+    }, {
+      "name": "Soups",
+      "id": "soups",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/soups?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 117
+    }, {
+      "name": "Stocks",
+      "id": "stocks",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/stocks?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 36
+    }, {
+      "name": "Vegetables",
+      "id": "vegetables",
+      "url": "https://api.pearson.com/kitchen-manager/v1/courses/vegetables?apikey=9b7305c0523c3902ec01b44e5a5c53ad",
+      "recipe_count": 139
+    }
+  ]
+}
