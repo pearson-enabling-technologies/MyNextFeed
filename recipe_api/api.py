@@ -129,10 +129,10 @@ def modify_plan(id, day, meal):
     ingredients = plan['metadata']['ingredients']
     recipes = query_recipes(meal, cuisine, ingredients, calories, result_size)
     # Replace unwanted recipe with a random new recipe from the results (if not already used)
-    used_recipes = set(d[meal]['name'] for d in plan['days']) # TODO check field names
+    used_recipes = set(d[meal]['meal_name'] for d in plan['days']) # TODO check field names
     candidate_recipes = [recipe for recipe in recipes if recipe['name'] not in used_recipes]
     chosen_recipe = choice(candidate_recipes)
-    plan['days'][day] = transform_meal(chosen_recipe)
+    plan['days'][day][meal] = transform_meal(chosen_recipe)
     return plan
 
 
