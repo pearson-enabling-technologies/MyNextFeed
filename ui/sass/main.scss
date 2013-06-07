@@ -1,0 +1,130 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass";
+@import "compass/reset";
+
+$accent-color: #9D1349;
+$main-header-height: 3vw;
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    font-family: 'Droid Sans', sans-serif;
+  }
+}
+
+body {
+  background: $accent-color;
+  font: normal 1vw "Helvetica Neue", "Helvetica", sans-serif;
+}
+
+#container {
+  position: absolute;
+  left: 1vw;
+  right: 1vw;
+  top: 1vh;
+  bottom: 1vh;
+  @include box-shadow(rgba(black, .1) 0 0 10px 10px);
+}
+
+.criteriaBar {
+  background: white;
+  position: absolute;
+  height: $main-header-height;
+  top: 0;
+  right: 0;
+  width: 30%;
+  display: table;
+  > * {
+    display: table-cell;
+  }
+}
+
+.days-container {
+  position: absolute;
+  background: white;
+  top: $main-header-height;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @include experimental-value(display, flex);
+  @include experimental(flex-direction, row);
+}
+
+h1 {
+  padding: .5vw;
+  height: $main-header-height;
+  @include box-sizing(border-box);
+  background: rgba(white, .1);
+  color: white;
+  font-size: 1.5vw;
+}
+
+.day {
+  border-right: 1px solid $accent-color;
+  @include box-shadow(rgba($accent-color, .1) 1px 0 4px 0);
+  @include box-sizing(border-box);
+  @include experimental-value(display, flex);
+  @include experimental(flex-direction, column);
+  width: 14.285714286%;
+  $course-padding: 1vw;
+  &:last-child {
+    border-right: none;
+  }
+  .course {
+    padding: $course-padding;
+    position: relative;
+    border-bottom: 1px solid $accent-color;
+    @include box-sizing(border-box);
+    @include box-shadow(rgba($accent-color, .1) 0 1px 4px 0);
+    @include experimental(flex, 1);
+    &:last-child {
+      border-bottom: none;
+      @include box-shadow(transparent 0 0);
+    }
+    .full-desc {
+      display: none;
+    }
+    width: 100% / 7;
+  }
+  .lead {
+    h3 {
+      color: $accent-color;
+      margin-bottom: .3em;
+      font-size: 1vw;
+    }
+    img {
+      position: absolute;
+      left: $course-padding;
+      bottom: $course-padding;
+      border-radius: 10px;
+      width: 200px;
+      height: 200px;
+    }
+    dl {
+      position: absolute;
+      left: $course-padding * 0.5;
+      bottom: $course-padding * 0.5;
+      text-align: center;
+      font-size: .8vw;
+      padding: .3vw;
+      border: 2px solid rgba(#ccc, .5);
+      border-radius: 5px;
+      background: white;
+      > * {
+        padding: 2px;
+      }
+    }
+  }
+  dt {
+    font-size: .6vw;
+    color: #666;
+  }
+  dd {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.2vw;
+  }
+}
