@@ -47,6 +47,13 @@ def jsonp(dictionary):
     return dictionary
 
 
+@route('/cuisines', method='GET')
+def get_cuisines():
+    data = query_cuisines()
+    return jsonp(
+        dict((term['term'], term['count']) for term in data['terms']))
+
+
 @route('/', method='GET')
 def homepage():
     return jsonp(es.get('/'))
@@ -80,6 +87,24 @@ def get_substitute(id, day, meal):
     plan = modify_plan(id, int(day), meal)
     plan['metadata']['id'] = store_plan(plan)
     return jsonp(plan)
+
+
+def query_cuisines():
+    query = {
+        'query' : {
+            'match_all' : {  }
+        },
+        'facets' : {
+            'cuisines' : {
+                'terms' : {
+                    'field' : 'cuisine',
+                    'size' : 200
+                }
+            }
+        }
+    }
+    raw_result = es.get('recipes/_search?search_type=count', data=query)
+    return raw_result['facets']['cuisines']
 
 
 def query_recipes(meal, cuisine, ingredients, calories, n):
