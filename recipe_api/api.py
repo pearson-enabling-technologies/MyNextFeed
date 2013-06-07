@@ -124,7 +124,8 @@ def query_recipes(meal, cuisine, ingredients, calories, n):
     for ingredient in ingredients.split(','):
         ingredients_clause.append({ 'match' : { 'ingredients' : ingredient } })
         name_clause.append({ 'match' : { 'name' : { 'query' : ingredient, 'boost' : 3 } } })
-    should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } }] \
+    should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } },
+        { 'prefix' : { 'thumb' : { 'value' : 'http', 'boost' : 2 } } }] \
         + ingredients_clause \
         + name_clause \
         + [{ 'match_all' : {} }]
