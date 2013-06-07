@@ -47,8 +47,11 @@ def jsonp(dictionary):
     return dictionary
 
 
-#@route('/ingredients', method='GET')
-#def get_ingredients()
+@route('/ingredients/:count', method='GET')
+def get_ingredients(count):
+    data = query_terms('ingredients', int(count))
+    return jsonp(
+        dict((term['term'], term['count']) for term in data['terms']))
 
 
 @route('/cuisines', method='GET')
