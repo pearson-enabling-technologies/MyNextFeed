@@ -100,8 +100,8 @@ h1 {
       left: $course-padding;
       bottom: $course-padding;
       border-radius: 10px;
-      width: 200px;
-      height: 200px;
+      max-width: 80%;
+      max-height: 200px;
     }
     dl {
       position: absolute;
