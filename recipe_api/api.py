@@ -28,6 +28,8 @@ result_size = 20
 
 es = rawes.Elastic('ec2-54-216-139-182.eu-west-1.compute.amazonaws.com:9200')
 
+coursesList = ['breakfast', 'lunch', 'dinner']
+
 courses = {
     'breakfast' : 'breakfast-brunch',
     'lunch' : 'appetizers,pasta,salads,sandwiches,soups,bread',
@@ -74,13 +76,20 @@ def get_cuisines():
 def get_plan(calories, cuisine, ingredients):
     weekPlan = []
     mealRecipeLists = {}
-    for i, meal in enumerate(courses):
+    for meal in courses:
         mealRecipeLists[meal] = query_recipes(meal, cuisine, ingredients, int(calories)*calorieMealRatios[meal], result_size)
     for i in range(7):
         dayPlan = {}
-        for meal in courses.keys():
-            dayPlan[meal] = transform_meal(mealRecipeLists[meal][0])
-            mealRecipeLists[meal].pop(0)
+        for meal in coursesList:
+            if meal == "dinner":
+                for j, dish in enumerate(mealRecipeLists[meal]):
+                    dayPlan[meal] = transform_meal(mealRecipeLists[meal][j])
+                    if sum_calories(dayPlan) < calories:
+                        mealRecipeLists[meal].pop(j)
+                        break                   
+            else:
+                dayPlan[meal] = transform_meal(mealRecipeLists[meal][0])
+                mealRecipeLists[meal].pop(0)
         weekPlan.append(dayPlan)
     plan = dict(
         days = weekPlan, 
@@ -99,6 +108,12 @@ def get_substitute(id, day, meal):
     plan['metadata']['id'] = store_plan(plan)
     return jsonp(plan)
 
+def sum_calories(dayPlan):
+    calories = 0
+    for meal in dayPlan:
+        pprint(dayPlan[meal])
+        calories += float(dayPlan[meal]['calories'])
+    return calories
 
 def query_terms(fieldname, n):
     query = {
@@ -124,29 +139,37 @@ def query_recipes(meal, cuisine, ingredients, calories, n):
     for ingredient in ingredients.split(','):
         ingredients_clause.append({ 'match' : { 'ingredients' : ingredient } })
         name_clause.append({ 'match' : { 'name' : { 'query' : ingredient, 'boost' : 3 } } })
-    should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } },
-        { 'prefix' : { 'thumb' : { 'value' : 'http', 'boost' : 2 } } }] \
+    should_clause = [{ 'match' : { 'cuisine' : { 'query' : cuisine, 'boost' : 3 } } }] \
         + ingredients_clause \
         + name_clause \
         + [{ 'match_all' : {} }]
     query = {
         "query": {
-            "custom_filters_score": {
-                "query": { 
-                    'bool' : {
-                        'should' : should_clause
-                    }
-                },
-                "filters": [
-                    {
-                        "filter": {
-                            "exists": {
-                                "field": "calories"
+            "filtered" : {
+                "query" : {
+                    "custom_filters_score": {
+                        "query": { 
+                            'bool' : {
+                                'should' : should_clause
                             }
                         },
-                        "script": "min( " + str(calories) + "/ doc['calories'].value, doc['calories'].value / " + str(calories) + ")"
+                        "filters": [
+                            {
+                                "filter": {
+                                    "exists": {
+                                        "field": "calories"
+                                    }
+                                },
+                                "script": "min( " + str(calories) + "/ doc['calories'].value, doc['calories'].value / " + str(calories) + ")"
+                            }
+                        ]
                     }
-                ]
+                },
+                "filter" : {
+                    "exists": {
+                        "field": "calories"
+                    }
+                }
             }
         }
     }
@@ -197,7 +220,7 @@ def transform_meal(meal):
 bottle.debug(True) 
 run(host='0.0.0.0', reloader=True)
 # pprint(query_recipes('dinner', 'Italian', 'chicken,basil,tomato', 0.1, 1))
-# pprint(get_plan(1, 'Italian', 'chicken,basil,tomato'))
+# pprint(get_plan(1000, 'Italian', 'chicken,basil,tomato'))
 
 
 
