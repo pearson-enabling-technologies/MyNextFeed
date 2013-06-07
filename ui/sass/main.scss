@@ -40,7 +40,12 @@ body {
   form {
     @include experimental-value(display, flex);
     @include experimental(flex-direction, row);
-    @include experimental(box-pack, center);
+    padding-top: $main-header-height / 5;
+    input,
+    select,
+    label {
+      font-size: 1.2em;
+    }
   }
 }
 
