@@ -1,5 +1,5 @@
 import bottle
-import simplejson
+import simplejson as json
 import rawes
 import hashlib
 from pprint import pprint
@@ -43,7 +43,7 @@ calorieMealRatios = {
 
 def jsonp(dictionary):
     if (bottle.request.query.callback):
-        return "%s(%s)" % (bottle.request.query.callback, dictionary)
+        return "%s(%s)" % (bottle.request.query.callback, json.dumps(dictionary))
     return dictionary
 
 
